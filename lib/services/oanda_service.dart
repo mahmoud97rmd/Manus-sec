@@ -1,36 +1,70 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import '../config/oanda_config.dart';
 import '../models/candle.dart';
 import '../models/tick.dart';
 
+/// OANDA Service for API Integration
+/// 
+/// This service handles all OANDA API interactions including:
+/// - Fetching historical candle data
+/// - Getting current prices
+/// - Creating and managing orders
+/// - Managing positions
+/// - Account information
+/// 
+/// Uses OandaConfig for credential management
 class OandaService {
-  static const String baseUrl = 'https://api-fxpractice.oanda.com';
   static const String streamingUrl = 'https://stream-fxpractice.oanda.com';
   
-  final String apiToken;
-  final String accountId;
-  final Dio dio;
+  late final String apiToken;
+  late final String accountId;
+  late final Dio dio;
   final Logger logger = Logger();
 
+  /// Initialize OandaService with credentials from OandaConfig
   OandaService({
-    required this.apiToken,
-    required this.accountId,
-  }) : dio = Dio(BaseOptions(
-    baseUrl: baseUrl,
-    headers: {
-      'Authorization': 'Bearer $apiToken',
-      'Content-Type': 'application/json',
-      'Accept-Datetime-Format': 'UNIX',
-    },
-  ));
+    String? apiToken,
+    String? accountId,
+  }) {
+    this.apiToken = apiToken ?? OandaConfig.apiKey;
+    this.accountId = accountId ?? OandaConfig.accountId;
+    
+    // Validate configuration
+    if (!OandaConfig.validateConfig()) {
+      logger.w('⚠️ OANDA Configuration validation failed');
+    }
+    
+    // Initialize Dio with OandaConfig
+    dio = Dio(BaseOptions(
+      baseUrl: OandaConfig.baseUrl,
+      headers: OandaConfig.defaultHeaders,
+      connectTimeout: const Duration(milliseconds: OandaConfig.connectionTimeout),
+      receiveTimeout: const Duration(milliseconds: OandaConfig.readTimeout),
+      sendTimeout: const Duration(milliseconds: OandaConfig.writeTimeout),
+    ));
+    
+    logger.i('✓ OandaService initialized');
+    logger.i('  Account: ${this.accountId}');
+    logger.i('  Environment: ${OandaConfig.environment}');
+  }
 
   /// Fetch historical candles from OANDA
+  /// 
+  /// Parameters:
+  ///   - instrument: Forex pair (e.g., 'EUR_USD')
+  ///   - granularity: Candle granularity (e.g., 'M5', 'H1', 'D')
+  ///   - count: Number of candles to fetch (default: 500)
+  /// 
+  /// Returns: List of Candle objects
   Future<List<Candle>> fetchCandles({
     required String instrument,
     required String granularity,
     int count = 500,
   }) async {
     try {
+      logger.d('Fetching candles: $instrument ($granularity) - count: $count');
+      
       final response = await dio.get(
         '/v3/accounts/$accountId/candles',
         queryParameters: {
