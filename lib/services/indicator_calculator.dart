@@ -35,7 +35,7 @@ class IndicatorCalculator {
 
       result.add(IndicatorValue(
         time: candles[i].time,
-        value: ema!,
+        value: ema ?? 0,
       ));
     }
 
@@ -256,7 +256,7 @@ class IndicatorCalculator {
         variance += (candles[j].close - sma) * (candles[j].close - sma);
       }
       variance /= period;
-      final stdDev = variance.isNaN ? 0 : stdDev = variance.sqrt();
+      final stdDev = variance.isNaN ? 0 : variance.sqrt();
 
       result.add({
         'middle': sma,

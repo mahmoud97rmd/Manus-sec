@@ -1,8 +1,4 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'candle.g.dart';
-
-@JsonSerializable()
+/// Candle data model representing OHLC price data
 class Candle {
   final DateTime time;
   final double open;
@@ -20,8 +16,27 @@ class Candle {
     required this.volume,
   });
 
-  factory Candle.fromJson(Map<String, dynamic> json) => _$CandleFromJson(json);
-  Map<String, dynamic> toJson() => _$CandleToJson(this);
+  /// Create Candle from JSON
+  factory Candle.fromJson(Map<String, dynamic> json) {
+    return Candle(
+      time: DateTime.parse(json['time'] as String),
+      open: (json['open'] as num).toDouble(),
+      high: (json['high'] as num).toDouble(),
+      low: (json['low'] as num).toDouble(),
+      close: (json['close'] as num).toDouble(),
+      volume: json['volume'] as int? ?? 0,
+    );
+  }
+
+  /// Convert Candle to JSON
+  Map<String, dynamic> toJson() => {
+    'time': time.toIso8601String(),
+    'open': open,
+    'high': high,
+    'low': low,
+    'close': close,
+    'volume': volume,
+  };
 
   Candle copyWith({
     DateTime? time,

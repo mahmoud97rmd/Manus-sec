@@ -1,8 +1,4 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'tick.g.dart';
-
-@JsonSerializable()
+/// Tick data model representing bid/ask price data
 class Tick {
   final DateTime time;
   final double bid;
@@ -14,9 +10,23 @@ class Tick {
     required this.ask,
   });
 
-  factory Tick.fromJson(Map<String, dynamic> json) => _$TickFromJson(json);
-  Map<String, dynamic> toJson() => _$TickToJson(this);
+  /// Create Tick from JSON
+  factory Tick.fromJson(Map<String, dynamic> json) {
+    return Tick(
+      time: DateTime.parse(json['time'] as String),
+      bid: (json['bid'] as num).toDouble(),
+      ask: (json['ask'] as num).toDouble(),
+    );
+  }
 
+  /// Convert Tick to JSON
+  Map<String, dynamic> toJson() => {
+    'time': time.toIso8601String(),
+    'bid': bid,
+    'ask': ask,
+  };
+
+  /// Get mid price (average of bid and ask)
   double get mid => (bid + ask) / 2;
 
   @override

@@ -99,23 +99,30 @@ class OandaConfig {
   /// Returns true if all required fields are set correctly
   static bool validateConfig() {
     if (accountId.isEmpty) {
+      // ignore: avoid_print
       print('❌ Error: OANDA Account ID is not configured');
       return false;
     }
     
     if (apiKey.isEmpty) {
+      // ignore: avoid_print
       print('❌ Error: OANDA API Key is not configured');
       return false;
     }
     
     if (environment != 'practice' && environment != 'live') {
+      // ignore: avoid_print
       print('❌ Error: Invalid OANDA environment. Must be "practice" or "live"');
       return false;
     }
     
+    // ignore: avoid_print
     print('✓ OANDA Configuration is valid');
+    // ignore: avoid_print
     print('  Account ID: $accountId');
+    // ignore: avoid_print
     print('  Environment: $environment');
+    // ignore: avoid_print
     print('  Base URL: $baseUrl');
     
     return true;
@@ -124,18 +131,28 @@ class OandaConfig {
   /// Print configuration (for debugging)
   /// WARNING: Do not print API key in production!
   static void printConfig({bool showApiKey = false}) {
+    // ignore: avoid_print
     print('\n=== OANDA Configuration ===');
+    // ignore: avoid_print
     print('Account ID: $accountId');
     if (showApiKey) {
+      // ignore: avoid_print
       print('API Key: $apiKey');
     } else {
+      // ignore: avoid_print
       print('API Key: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}');
     }
+    // ignore: avoid_print
     print('Environment: $environment');
+    // ignore: avoid_print
     print('Base URL: $baseUrl');
+    // ignore: avoid_print
     print('API Endpoint: $apiEndpoint');
+    // ignore: avoid_print
     print('Accounts Endpoint: $accountsEndpoint');
+    // ignore: avoid_print
     print('Supported Instruments: ${supportedInstruments.length}');
+    // ignore: avoid_print
     print('===========================\n');
   }
 }

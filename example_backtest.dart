@@ -7,9 +7,11 @@ import 'lib/models/candle.dart';
 import 'lib/services/backtest_engine.dart';
 import 'lib/services/strategy_engine.dart';
 import 'lib/services/virtual_exchange.dart';
-import 'lib/services/indicator_calculator.dart';
 
 void main() async {
+  // ignore: avoid_print
+  print('=== Flutter Trading App - Backtest Examples ===\n');
+  
   // Example 1: Simple Backtest
   await runSimpleBacktest();
 
@@ -22,6 +24,7 @@ void main() async {
 
 /// Example 1: Run a simple backtest
 Future<void> runSimpleBacktest() async {
+  // ignore: avoid_print
   print('=== Example 1: Simple Backtest ===\n');
 
   // Create services
@@ -45,17 +48,23 @@ Future<void> runSimpleBacktest() async {
     );
 
     // Print results
+    // ignore: avoid_print
     print('\n${result.toString()}');
+    // ignore: avoid_print
     print('Equity Curve Points: ${result.equityCurve.length}');
+    // ignore: avoid_print
     print('Max Equity: ${result.equityCurve.reduce((a, b) => a > b ? a : b)}');
+    // ignore: avoid_print
     print('Min Equity: ${result.equityCurve.reduce((a, b) => a < b ? a : b)}');
   } catch (e) {
+    // ignore: avoid_print
     print('Error running backtest: $e');
   }
 }
 
 /// Example 2: Optimize strategy parameters
 Future<void> optimizeStrategy() async {
+  // ignore: avoid_print
   print('\n=== Example 2: Strategy Optimization ===\n');
 
   // Create services
@@ -78,19 +87,27 @@ Future<void> optimizeStrategy() async {
       lotSizes: [0.1, 0.2],
     );
 
+    // ignore: avoid_print
     print('Best Parameters Found:');
-    print('EMA50 Period: ${bestParams['ema50']}');
-    print('EMA150 Period: ${bestParams['ema150']}');
-    print('Lot Size: ${bestParams['lotSize']}');
-    print('Total Profit: \$${bestParams['totalProfit']}');
-    print('Win Rate: ${bestParams['winRate']}%');
+    // ignore: avoid_print
+    print('EMA50 Period: ${bestParams[\'ema50\']}');
+    // ignore: avoid_print
+    print('EMA150 Period: ${bestParams[\'ema150\']}');
+    // ignore: avoid_print
+    print('Lot Size: ${bestParams[\'lotSize\']}');
+    // ignore: avoid_print
+    print('Total Profit: \$${bestParams[\'totalProfit\']}');
+    // ignore: avoid_print
+    print('Win Rate: ${bestParams[\'winRate\']}%');
   } catch (e) {
+    // ignore: avoid_print
     print('Error optimizing strategy: $e');
   }
 }
 
 /// Example 3: Compare different strategies
 Future<void> compareStrategies() async {
+  // ignore: avoid_print
   print('\n=== Example 3: Compare Strategies ===\n');
 
   // Generate sample candles
@@ -103,6 +120,7 @@ Future<void> compareStrategies() async {
     {'ema50': 100, 'ema150': 200, 'name': 'Slow'},
   ];
 
+  // ignore: avoid_print
   print('Strategy Comparison Results:\n');
 
   for (final strategy in strategies) {
@@ -119,16 +137,21 @@ Future<void> compareStrategies() async {
 
     try {
       final result = await backtestEngine.runBacktest(candles);
-
-      print('${strategy['name']} Strategy:');
+      // ignore: avoid_print
+      print('${strategy[\'name\']} Strategy:');
+      // ignore: avoid_print
       print('  Total Profit: \$${result.totalProfit.toStringAsFixed(2)}');
+      // ignore: avoid_print
       print('  Win Rate: ${result.winRate.toStringAsFixed(2)}%');
+      // ignore: avoid_print
       print('  Max Drawdown: ${result.maxDrawdown.toStringAsFixed(2)}%');
+      // ignore: avoid_print
       print('  Total Trades: ${result.totalTrades}');
+      // ignore: avoid_print
       print('');
     } catch (e) {
-      print('Error: $e\n');
-    }
+      // ignore: avoid_print
+      print('Error: $e\n');    }
   }
 }
 
@@ -184,20 +207,20 @@ class PerformanceMetrics {
   /// Calculate Sharpe Ratio
   /// Measures risk-adjusted returns
   static double calculateSharpeRatio(
-    List<double> returns,
+    List<double> returns, {
     double riskFreeRate = 0.02,
-  ) {
+  }) {
     if (returns.isEmpty) return 0;
 
     // Calculate average return
-    double avgReturn = returns.fold(0, (a, b) => a + b) / returns.length;
+    final avgReturn = returns.fold<double>(0, (a, b) => a + b) / returns.length;
 
     // Calculate standard deviation
     double variance = 0;
     for (final ret in returns) {
       variance += (ret - avgReturn) * (ret - avgReturn);
     }
-    double stdDev = (variance / returns.length).sqrt();
+    final stdDev = (variance / returns.length).sqrt();
 
     if (stdDev == 0) return 0;
     return (avgReturn - riskFreeRate) / stdDev;
@@ -209,8 +232,8 @@ class PerformanceMetrics {
     List<double> profits,
     List<double> losses,
   ) {
-    double totalProfit = profits.fold(0, (a, b) => a + b);
-    double totalLoss = losses.fold(0, (a, b) => a + b).abs();
+    final totalProfit = profits.fold<double>(0, (a, b) => a + b);
+    final totalLoss = losses.fold<double>(0, (a, b) => a + b).abs();
 
     if (totalLoss == 0) return 0;
     return totalProfit / totalLoss;
