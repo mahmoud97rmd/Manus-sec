@@ -90,15 +90,15 @@ Future<void> optimizeStrategy() async {
     // ignore: avoid_print
     print('Best Parameters Found:');
     // ignore: avoid_print
-    print('EMA50 Period: ${bestParams[\'ema50\']}');
+    print('EMA50 Period: ${bestParams["ema50"]}');
     // ignore: avoid_print
-    print('EMA150 Period: ${bestParams[\'ema150\']}');
+    print('EMA150 Period: ${bestParams["ema150"]}');
     // ignore: avoid_print
-    print('Lot Size: ${bestParams[\'lotSize\']}');
+    print('Lot Size: ${bestParams["lotSize"]}');
     // ignore: avoid_print
-    print('Total Profit: \$${bestParams[\'totalProfit\']}');
+    print('Total Profit: \$${bestParams["totalProfit"]}');
     // ignore: avoid_print
-    print('Win Rate: ${bestParams[\'winRate\']}%');
+    print('Win Rate: ${bestParams["winRate"]}%');
   } catch (e) {
     // ignore: avoid_print
     print('Error optimizing strategy: $e');
@@ -115,9 +115,9 @@ Future<void> compareStrategies() async {
 
   // Test different parameter combinations
   final strategies = [
-    {'ema50': 20, 'ema150': 50, 'name': 'Fast'},
-    {'ema50': 50, 'ema150': 150, 'name': 'Medium'},
-    {'ema50': 100, 'ema150': 200, 'name': 'Slow'},
+    {"ema50": 20, "ema150": 50, "name": "Fast"},
+    {"ema50": 50, "ema150": 150, "name": "Medium"},
+    {"ema50": 100, "ema150": 200, "name": "Slow"},
   ];
 
   // ignore: avoid_print
@@ -132,13 +132,14 @@ Future<void> compareStrategies() async {
     );
 
     // Set parameters
-    strategyEngine.ema50Period = strategy['ema50'] as int;
-    strategyEngine.ema150Period = strategy['ema150'] as int;
+    strategyEngine.ema50Period = strategy["ema50"] as int;
+    strategyEngine.ema150Period = strategy["ema150"] as int;
 
     try {
       final result = await backtestEngine.runBacktest(candles);
+
       // ignore: avoid_print
-      print('${strategy[\'name\']} Strategy:');
+      print('${strategy["name"]} Strategy:');
       // ignore: avoid_print
       print('  Total Profit: \$${result.totalProfit.toStringAsFixed(2)}');
       // ignore: avoid_print
@@ -151,7 +152,8 @@ Future<void> compareStrategies() async {
       print('');
     } catch (e) {
       // ignore: avoid_print
-      print('Error: $e\n');    }
+      print('Error: $e\n');
+    }
   }
 }
 
@@ -220,7 +222,7 @@ class PerformanceMetrics {
     for (final ret in returns) {
       variance += (ret - avgReturn) * (ret - avgReturn);
     }
-    final stdDev = (variance / returns.length).sqrt();
+    final stdDev = _calculateSquareRoot(variance / returns.length);
 
     if (stdDev == 0) return 0;
     return (avgReturn - riskFreeRate) / stdDev;
@@ -248,4 +250,20 @@ class PerformanceMetrics {
     if (maxDrawdown == 0) return 0;
     return netProfit / maxDrawdown;
   }
+}
+
+/// Helper method to calculate square root using Newton's method
+double _calculateSquareRoot(double value) {
+  if (value.isNaN || value < 0) return 0;
+  if (value == 0) return 0;
+  
+  double x = value;
+  double prev = 0;
+  
+  while ((x - prev).abs() > 1e-10) {
+    prev = x;
+    x = (x + value / x) / 2;
+  }
+  
+  return x;
 }
