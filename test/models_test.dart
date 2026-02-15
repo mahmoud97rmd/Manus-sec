@@ -132,8 +132,8 @@ void main() {
         openTime: DateTime.now(),
       );
 
-      // Profit = (1.0600 - 1.0500) * 1.0 * 100 = 10
-      expect(position.profitLoss, equals(10.0));
+      // Profit = (1.0600 - 1.0500) * 1.0 * 100 = 0.01 * 100 = 1.0
+      expect(position.profitLoss, equals(1.0));
       expect(position.isProfit, isTrue);
     });
 
@@ -147,8 +147,8 @@ void main() {
         openTime: DateTime.now(),
       );
 
-      // Profit = (1.0600 - 1.0500) * 1.0 * 100 = 10
-      expect(position.profitLoss, equals(10.0));
+      // Profit = (1.0600 - 1.0500) * 1.0 * 100 = 0.01 * 100 = 1.0
+      expect(position.profitLoss, equals(1.0));
       expect(position.isProfit, isTrue);
     });
 

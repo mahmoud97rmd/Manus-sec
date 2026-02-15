@@ -1,4 +1,5 @@
 import 'package:logger/logger.dart';
+import 'dart:math';
 import '../models/candle.dart';
 import '../models/indicator.dart';
 
