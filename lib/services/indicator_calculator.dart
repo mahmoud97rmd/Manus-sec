@@ -1,5 +1,4 @@
 import 'package:logger/logger.dart';
-import 'dart:math';
 import '../models/candle.dart';
 import '../models/indicator.dart';
 
@@ -251,13 +250,15 @@ class IndicatorCalculator {
       }
       final sma = sum / period;
 
-      // Calculate standard deviation
+      // Calculate standard deviation using manual calculation
       double variance = 0;
       for (int j = i - period + 1; j <= i; j++) {
         variance += (candles[j].close - sma) * (candles[j].close - sma);
       }
       variance /= period;
-      final stdDev = variance.isNaN ? 0 : variance.sqrt();
+      
+      // Calculate square root manually to avoid import issues
+      final stdDev = _calculateSquareRoot(variance);
 
       result.add({
         'middle': sma,
@@ -267,5 +268,23 @@ class IndicatorCalculator {
     }
 
     return result;
+  }
+
+  /// Helper method to calculate square root using Newton's method
+  /// This avoids dependency on dart:math
+  double _calculateSquareRoot(double value) {
+    if (value.isNaN || value < 0) return 0;
+    if (value == 0) return 0;
+    
+    // Newton's method for square root calculation
+    double x = value;
+    double prev = 0;
+    
+    while ((x - prev).abs() > 1e-10) {
+      prev = x;
+      x = (x + value / x) / 2;
+    }
+    
+    return x;
   }
 }

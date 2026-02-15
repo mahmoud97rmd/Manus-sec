@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import '../config/oanda_config.dart';
 import '../models/candle.dart';
-import '../models/tick.dart';
 
 /// OANDA Service for API Integration
 /// 
